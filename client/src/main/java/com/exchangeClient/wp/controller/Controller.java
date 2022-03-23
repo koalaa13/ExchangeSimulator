@@ -33,7 +33,7 @@ public class Controller {
 
     @RequestMapping("/deposit")
     public String deposit(@RequestParam final String name, @RequestParam final int amount) {
-        return "Added " + amount + "money for " + userService.updateBalance(name, amount) + " users.";
+        return "Added " + amount + " money for " + userService.updateBalance(name, amount) + " users.";
     }
 
     private Map<String, Integer> getUsersStocksPrices(User user) {
@@ -45,7 +45,7 @@ public class Controller {
         return res;
     }
 
-    @RequestMapping("/user_profile")
+    @RequestMapping("/user_stocks")
     public String getUsersStocks(@RequestParam final String username) {
         var optionalUser = userService.findOneByName(username);
         if (optionalUser.isPresent()) {
@@ -60,6 +60,16 @@ public class Controller {
             return res.toString();
         } else {
             return "No such user";
+        }
+    }
+
+    @RequestMapping("/user_profile")
+    public String getUser(@RequestParam final String username) {
+        var optionalUser = userService.findOneByName(username);
+        if (optionalUser.isPresent()) {
+            return optionalUser.get().toString();
+        } else {
+            return "No such user with name " + username;
         }
     }
 
@@ -93,7 +103,7 @@ public class Controller {
 
     @RequestMapping("/sell_stock")
     public int sellStock(@RequestParam final String username, @RequestParam final String stockName,
-                        @RequestParam final int count, @RequestParam final int price) {
+                         @RequestParam final int count, @RequestParam final int price) {
         var optionalUser = userService.findOneByName(username);
         if (optionalUser.isPresent()) {
             int sold = exchangeService.sellStock(stockName, count, price);
