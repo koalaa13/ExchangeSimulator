@@ -36,6 +36,16 @@ public class StockService {
         }
     }
 
+    public int getCountByName(String name) {
+        var optionalStock = findOneByName(name);
+        if (optionalStock.isPresent()) {
+            Stock stock = optionalStock.get();
+            return stock.getCount();
+        } else {
+            return 0;
+        }
+    }
+
     public int getPriceByName(String name) {
         var optionalStock = findOneByName(name);
         if (optionalStock.isPresent()) {
@@ -65,7 +75,7 @@ public class StockService {
             Stock stock = optionalStock.get();
             if (stock.getPrice() <= cost) {
                 int bought = Math.min(stock.getCount(), count);
-                updateCount(name, -count);
+                updateCount(name, -bought);
                 return bought;
             } else {
                 return 0;

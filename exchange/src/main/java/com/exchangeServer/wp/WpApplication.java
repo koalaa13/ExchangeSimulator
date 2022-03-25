@@ -6,13 +6,11 @@ import lombok.SneakyThrows;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 @SpringBootApplication
 public class WpApplication {
@@ -28,30 +26,31 @@ public class WpApplication {
 
     public static void main(String[] args) {
         var applicationContext = SpringApplication.run(WpApplication.class, args);
-        StockService stockService = (StockService) applicationContext.getBean("stockService");
-        MyRandom random = new MyRandom(1337228);
+//        StockService stockService = (StockService) applicationContext.getBean("stockService");
+//        MyRandom random = new MyRandom(1337228);
 
-        stockService.clear();
-        stockService.ipo("Yandex", 100, 100);
-        stockService.ipo("Google", 1000, 1000);
-        stockService.ipo("Meta", 150, 300);
-        stockService.ipo("Amazon", 1100, 2000);
-        List<String> companies = stockService.findAll()
-                .stream().map(Stock::getName)
-                .collect(Collectors.toList());
+//        stockService.clear();
+//        stockService.ipo("Yandex", 100, 100);
+//        stockService.ipo("Google", 1000, 1000);
+//        stockService.ipo("Meta", 150, 300);
+//        stockService.ipo("Amazon", 1100, 2000);
+//        List<String> companies = stockService.findAll()
+//                .stream().map(Stock::getName)
+//                .collect(Collectors.toList());
 
-        Runnable priceChanging = new Runnable() {
-            @SneakyThrows
-            @Override
-            public void run() {
-                int companyId = random.nextNonNegative(companies.size());
-                int newPrice = random.nextNonNegative(3000);
-                stockService.updatePrice(companies.get(companyId), newPrice);
-            }
-        };
+//        Runnable priceChanging = new Runnable() {
+//            @SneakyThrows
+//            @Override
+//            public void run() {
+//                List<Stock> companies = stockService.findAll();
+//                int companyId = random.nextNonNegative(companies.size());
+//                int newPrice = random.nextNonNegative(3000);
+//                stockService.updatePrice(companies.get(companyId).getName(), newPrice);
+//            }
+//        };
 
         // randomly change cost of random stock every 5 seconds
-        ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1);
-        executorService.scheduleAtFixedRate(priceChanging, 0, 5, TimeUnit.SECONDS);
+//        ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1);
+//        executorService.scheduleAtFixedRate(priceChanging, 0, 5, TimeUnit.SECONDS);
     }
 }

@@ -20,15 +20,22 @@ public class Controller {
         this.exchangeService = exchangeService;
     }
 
+    @RequestMapping("/clear")
+    public void clear() {
+        userService.clear();
+    }
+
     @RequestMapping("/register")
     public String register(@RequestParam final String username) {
-        User user;
+        if (userService.findOneByName(username).isPresent()) {
+            return "Such user already exists";
+        }
         try {
-            user = userService.register(username);
+            userService.register(username);
         } catch (Exception e) {
             return "Error happened";
         }
-        return "Successfully added user " + user;
+        return "Successfully added user " + username;
     }
 
     @RequestMapping("/deposit")
@@ -43,6 +50,12 @@ public class Controller {
             res.put(stock.getKey(), stockPrice);
         }
         return res;
+    }
+
+    @RequestMapping("/balance")
+    public int getBalance(@RequestParam final String username) {
+        var optionalUser = userService.findOneByName(username);
+        return optionalUser.map(User::getBalance).orElse(0);
     }
 
     @RequestMapping("/user_stocks")
@@ -92,9 +105,13 @@ public class Controller {
                         @RequestParam final int count, @RequestParam final int price) {
         var optionalUser = userService.findOneByName(username);
         if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            if (user.getBalance() < price * count) {
+                return 0;
+            }
             int bought = exchangeService.buyStock(stockName, count, price);
             userService.updateStockCount(username, stockName, bought);
-            userService.updateBalance(username, -count * price);
+            userService.updateBalance(username, -bought * price);
             return bought;
         } else {
             return 0;
@@ -106,9 +123,13 @@ public class Controller {
                          @RequestParam final int count, @RequestParam final int price) {
         var optionalUser = userService.findOneByName(username);
         if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            if (user.getStocks().getOrDefault(stockName, 0) < count) {
+                return 0;
+            }
             int sold = exchangeService.sellStock(stockName, count, price);
             userService.updateStockCount(username, stockName, -sold);
-            userService.updateBalance(username, count * price);
+            userService.updateBalance(username, sold * price);
             return sold;
         } else {
             return 0;

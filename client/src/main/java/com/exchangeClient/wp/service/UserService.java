@@ -15,8 +15,8 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public User register(final String name) {
-        return userRepository.save(new User(name));
+    public void register(final String name) {
+        userRepository.save(new User(name));
     }
 
     public Optional<User> findOneByName(final String name) {
@@ -33,6 +33,10 @@ public class UserService {
         users.forEach(user -> user.changeBalance(balance));
         userRepository.saveAll(users);
         return users.size();
+    }
+
+    public void clear() {
+        userRepository.deleteAll();
     }
 
     public void updateStockCount(String username, String stockName, int count) {

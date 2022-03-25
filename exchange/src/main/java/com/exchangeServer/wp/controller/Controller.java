@@ -28,6 +28,11 @@ public class Controller {
         return "Successfully added stock: " + stock;
     }
 
+    @RequestMapping("/clear")
+    public void clear() {
+        stockService.clear();
+    }
+
     @RequestMapping("/all")
     public List<Stock> getAll() {
         return stockService.findAll();
@@ -36,6 +41,11 @@ public class Controller {
     @RequestMapping("/change_price")
     public String changePrice(@RequestParam final String name, @RequestParam final int newPrice) {
         return "Changed price of " + stockService.updatePrice(name, newPrice) + " stocks";
+    }
+
+    @RequestMapping("/get_count_by_name")
+    public int getCountByName(@RequestParam final String name) {
+        return stockService.getCountByName(name);
     }
 
     @RequestMapping("/get_price_by_name")

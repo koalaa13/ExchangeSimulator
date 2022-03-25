@@ -1,6 +1,7 @@
 package com.exchangeClient.wp.domain;
 
 import lombok.Data;
+import lombok.ToString;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 
@@ -10,6 +11,7 @@ import java.util.Map;
 @Data
 public class User {
     @Id
+    @ToString.Exclude
     private String id;
 
     @Indexed(unique = true)
